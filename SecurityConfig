@@ -11,6 +11,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers("/account", "/token").permitAll() // Permet à tout le monde d'accéder à /account et /token
             .antMatchers("/products/**").authenticated()  // Protection des produits
+            .antMatchers("/panier/**").authenticated()    // protection du panier        
             .and()
             .addFilter(jwtFilter); // Ajouter notre filtre JWT
     }
