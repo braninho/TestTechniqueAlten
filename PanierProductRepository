@@ -1,0 +1,5 @@
+import PanierProduct
+
+public interface PanierProductRepository extends JpaRepository<PanierProduct,Long> {
+  void deleteByPanierIdAndProductId(Long panierId, Long productId);
+}
