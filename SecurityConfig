@@ -1,0 +1,17 @@
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private JwtFilter jwtFilter;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable()
+            .authorizeRequests()
+            .antMatchers("/account", "/token").permitAll() // Permet à tout le monde d'accéder à /account et /token
+            .antMatchers("/products/**").authenticated()  // Protection des produits
+            .and()
+            .addFilter(jwtFilter); // Ajouter notre filtre JWT
+    }
+}
