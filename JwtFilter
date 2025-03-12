@@ -1,0 +1,18 @@
+
+
+@Component
+public class JwtFilter extends OncePerRequestFilter {
+
+  @Autowired
+  private JwtUtil jwtUtil;
+
+  public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws Exception {
+    String token = request.getHeader("Autorisation");
+
+    if (token != null && jwtUtil.validateToken(token, "admin@admin.com")) {
+      filterChain.doFilter(request, response);
+    } else {
+      response.setStatus(403);
+    }
+  }
+}
