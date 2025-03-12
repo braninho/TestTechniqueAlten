@@ -1,20 +1,25 @@
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.responseEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
+import Product;
+import ProductRepository;
+
 @RestController
+@RequestMapping("/products")
 public class ProductController {
 
   @Autowired
   private ProductRepository productRepository;
 
-  @PostMapping("/products")
+  @PostMapping
   public ResponseEntity<Product> createProduct(@RequestBody Product product) {
     try{
       Product savedProduct = productRepository.save(product);
@@ -24,12 +29,12 @@ public class ProductController {
     }
   }
 
-  @GetMapping("/products")
+  @GetMapping
   public List<Product> getAllProducts() {
     return productRepository.findAll();
   }
 
-  @GetMapping("/products/{id}")
+  @GetMapping("/{id}")
   public ResponseEntity<Product> getProductsById(@PathVariable(value = "id") Long productId) {
     Optional<Product> product = productRepository.findById(productId);
     if (product.isPresent()) {
@@ -38,4 +43,26 @@ public class ProductController {
       return ResponseEntity.notFound().build();
     }
   }  
+
+  @PutMapping("/{id}")
+  public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
+    return productRepository.findById(id).map(product -> {
+      product.setName(productDetails.getName());
+      product.setPrice(productDetails.getPrice());
+
+      Product updatedProduct = productRepository.save(product);
+
+      return ReponseEntity.ok(updatedProduct);
+    }).orElseGet(() -> ResponseEntity.notFound().build());
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
+    if (productReposiotory.existsById(id)) {
+      productRepository.deleteById(id);
+      return ResponseEntity.ok("Produit supprimé avec succés");
+    } else {
+      return ResponseEntity.status(404).body("Produit non trouvé");
+    }
+  }
 }
