@@ -1,0 +1,22 @@
+import User;
+import JwtUtil;
+import org.springframework.stereotype.Service;
+import org springframework.beans.factory.annotation.Autowired;
+
+@Service
+public class AuthentificationService {
+
+  @Autowired
+  private UserService userService;
+
+  @Autowired
+  private JwtUtil jwtUtil;
+
+  public String authen(String email, String password) {
+    User user = userService.getUserByEmail(email);
+    if (user != null && new BCryptPasswordEncoder().matches(password, user.getPassword())) {
+      return jwtUtil.generateToken(email);
+    }
+    throw new RuntimeException("Email ou password invalide");
+  }
+}
