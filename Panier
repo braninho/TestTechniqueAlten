@@ -1,0 +1,16 @@
+import User;
+
+@Entity
+public class Panier  {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long Id;
+
+  @ManyToOne
+  @JoinColumn(name="user_email",  nullable = false)
+  private User user;
+
+  @OneToMany(mappedBy="panier", cascade=CascadeType.ALL)
+  private List<PanierProduct> panierProducts;
+}
