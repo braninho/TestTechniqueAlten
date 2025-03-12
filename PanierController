@@ -1,0 +1,27 @@
+@RestController
+@RequestMapping("/panier")
+public class PanierController {
+
+  @Autowired
+  private PanierService panierService;
+
+  @PostMapping
+  public PanierProduct addProductToPanier(@RequestParam String email, @RequestParam Long productId, @RequestParam int quantity) {
+    return panierService.addProductToPanier(email, productId, quantity);
+  }
+
+  @GetMapping
+  public Panier getPanier(@RequestParam String email) {
+    return panierService.getPanierByUserEmail(email);
+  }
+
+  @PutMapping("/{productId}")
+  public panierProduct updatePanierProduct(@RequestParam email, @PathVariable Long productId, @RequestParam int quantity) {
+    return panierService.updatePanierProduct(email, productId, quantity);
+  }
+
+  @DeleteMapping("/{productId}")
+  public void removeProductFromPanier(@RequestParam String email, @PathVariable Long productId) {
+    panierService.removeProductFromPanier(email, productId);
+  }
+}
