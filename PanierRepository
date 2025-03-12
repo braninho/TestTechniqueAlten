@@ -1,0 +1,5 @@
+import Panier;
+
+public interface PanierRepository extends JpaRepository<Panier,Long> {
+  Panier findByUserEmail(String email);
+}
