@@ -1,0 +1,41 @@
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.responseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+public class ProductController {
+
+  @Autowired
+  private ProductRepository productRepository;
+
+  @PostMapping("/products")
+  public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    try{
+      Product savedProduct = productRepository.save(product);
+      return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
+    } catch (Exception e) {
+      return ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @GetMapping("/products")
+  public List<Product> getAllProducts() {
+    return productRepository.findAll();
+  }
+
+  @GetMapping("/products/{id}")
+  public ResponseEntity<Product> getProductsById(@PathVariable(value = "id") Long productId) {
+    Optional<Product> product = productRepository.findById(productId);
+    if (product.isPresent()) {
+      return ResponseEntity.ok().body(product.get());
+    } else {
+      return ResponseEntity.notFound().build();
+    }
+  }  
+}
