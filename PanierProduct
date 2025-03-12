@@ -1,0 +1,19 @@
+import Product;
+import Panier;
+
+@Entity
+public class PanierProduct {
+  @Id
+  @GeneratedValue(strategy= GenerationType.IDENTITY)
+  private Long id;
+
+  @ManyToOne
+  @JoinColumn(name="panier_id", nullable = false)
+  private Panier panier;
+
+  @ManyToOne
+  @JoinColumn(name="product_id", nullable = false)
+  private Product product;
+
+  private int quantity;
+}
