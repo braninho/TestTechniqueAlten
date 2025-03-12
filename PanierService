@@ -1,0 +1,40 @@
+@Service
+public class PanierService {
+  @Autowired
+  private PanierRepository panierRepository;
+
+  @Autowired
+  private PanierProductRepository panierProductRepository;
+
+  @Autowired
+  private ProductRepository productRepository;
+
+  public Panier getPanierByUserEmail(String email) {
+    return panierRepository.findByUserEmail(email);
+  }
+
+  public PanierProduct addProductToPanier(String email, Long productId, int quantity) {
+    Panier panier = panierRepository.findByUserEmail(email);
+    Product product = productRepository.findById(productId);
+    PanierProduct panierProduct = null;
+    if (product != null) {
+       panierProduct = new PanierProduct(panier, product, quantity);
+    }
+    return panierProductRepository.save(panierProduct);
+  }
+
+  public PanierProduct updatePanierProduct(String email, Long productId, int quantity) {
+    Panier panier = panierRepository.findByUserEmail(email);
+    PanierProduct panierProduct = panierProductRepository.findById(productId);
+
+    if (panierProduct != null) {
+       panierProduct.setQuantity(quantity);
+    }
+    return panierProductRepository.save(panierProduct);
+  }
+
+  public void removeProductFromPanier(String email, Long productId) {
+    Panier panier = panierRepository.findByUserEmail(email);
+    panierProductRepository.deleteByPanierIdAndProductId(panier.getId(),productId);
+  }
+}
